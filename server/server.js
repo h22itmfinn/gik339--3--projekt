@@ -39,15 +39,15 @@ server.get("/cars", (req, res) => {
   });
 
 // get fråga som returnerar en specifik bil baserat på regnr
-server.get("/cars/:regnr", (req, res) => {
-    const regnr = req.params.regnr;
-    const sql = `SELECT * FROM cars WHERE regnr = ${regnr}`;
+server.get("/cars/:id", (req, res) => {
+    const id = req.params.id;
+    const sql = `SELECT * FROM cars WHERE id=${id}`;
   
     db.all(sql, (err, rows) => {
       if (err) {
         res.status(500).send(err); // 500 är serverfel och err är error objektet
       } else {
-        res.send(rows); // 0:an gör att man får
+        res.send(rows[0]); // 0:an gör att man får
       }
     });
   });
@@ -67,13 +67,14 @@ server.post("/cars", (req, res) => {
     }); // andra
   });
 
-// update baserat på regnr
+// update baserat på id
 
 server.put("/cars", (req, res) => {
     //UPDATE users SET firstName="Mikaela",lastName="Hedberg" WHERE id=1
     const bodyData = req.body;
-    const regnr = bodyData.regnr;
+    const id = bodyData.id;
     const car = {
+      regnr: bodyData.regnr,
       brand: bodyData.brand,
       model: bodyData.model,
       price: bodyData.price,
@@ -87,7 +88,7 @@ server.put("/cars", (req, res) => {
       updateString += `${column}="${car[column]}"`;
       if (i !== columnsArray.length - 1) updateString += ",";
     });
-    const sql = `UPDATE cars SET ${updateString} WHERE regnr=${regnr}`;
+    const sql = `UPDATE cars SET ${updateString} WHERE id=${id}`;
 
     db.run(sql, (err) => {
     if (err) {
@@ -99,17 +100,30 @@ server.put("/cars", (req, res) => {
     });
 });
 
-// Tar bort bil baserat på regnr
-server.delete('/cars/:regnr', (req, res) => {
-    const regnr = req.params.regnr;
-    const sql = `DELETE FROM cars WHERE regnr = ${regnr}`;
+// // Tar bort bil baserat på id - ÅTERKOM TILL DENNA OCH KOLLA POSTMAN
+// server.delete('/cars/:id', (req, res) => {
+//     const id = req.params.id;
+//     const sql = `DELETE FROM cars WHERE id=${id}`;
     
-    db.run(sql, (err) => {
-        if (err) {
-        console.log(err);
-        res.status(500).send(err);
-        } else {
-        res.send('Bilen är borttagen');
-        }
-    });
+//     db.run(sql, (err) => {
+//         if (err) {
+//         console.log(err);
+//         res.status(500).send(err);
+//         } else {
+//         res.send('Bilen är borttagen');
+//         }
+//     });
+// });
+server.delete('/cars/:id', (req, res) => {
+  const id = req.params.id;
+  const sql = `DELETE FROM cars WHERE id = ${id}`;
+
+  db.run(sql, (err) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send(err);
+    } else {
+      res.send('Bilen borttagen');
+    }
+  });
 });
