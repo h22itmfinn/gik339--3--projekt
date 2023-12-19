@@ -1,5 +1,7 @@
 const url = "http://localhost:3000/cars";
 
+
+
 window.addEventListener("load", fetchData);
 
 function fetchData() {
@@ -7,21 +9,20 @@ function fetchData() {
     .then((result) => result.json())
     .then((cars) => {
       if (cars.length > 0) {
-        let html = `<ul class="w-3/4 my-3 mx-auto flex flex-wrap gap-2 justify-center">`;
+        let html = `<ul class="list-group row row-cols-2">`;
         cars.forEach((car) => {
           html += `
         <li
-          class="bg-${car.color}-200 basis-1/4 text-${car.color}-900 p-2 rounded-md border-2 border-${car.color}-400 flex flex-col justify-between">
+          class="list-group-item col-md-6 text-bg-${car.color} mb-4 rounded shadow p-3">
           <h3>${car.id}. Regnr: ${car.regnr}. Märke: ${car.brand}. Modell: ${car.model}.</h3>
           <p>Årsmodel: ${car.yearmodel}. Pris: ${car.price}.</p>
           <div>
             <button
-              class="rounded-md bg-white/50 p-1 text-sm"
-              <button
-              class="border border-${car.color}-300 hover:bg-white/100 rounded-md bg-white/50 p-1 text-sm mt-2" onclick="setCurrentUser('${car.id}')">
+              class="btn btn-secondary"
+              <button class="" onclick="setCurrentUser('${car.id}')">
               Ändra
             </button>
-            <button class="border border-${car.color}-300 hover:bg-white/100 rounded-md bg-white/50 p-1 text-sm mt-2" onclick="deleteUser('${car.id}')">
+            <button class="btn btn-secondary " onclick="deleteUser('${car.id}')">
               Ta bort
             </button>
           </div>
@@ -47,11 +48,11 @@ function setCurrentUser(id) {
     .then((result) => result.json())
     .then((car) => {
       console.log(car);
-      carForm.regNumber.value = car.regnr;
-      carForm.carBrand.value = car.brand;
-      carForm.carModel.value = car.model;
+      carForm.regnumber.value = car.regnr;
+      carForm.carbrand.value = car.brand;
+      carForm.carmodel.value = car.model;
       carForm.price.value = car.price;
-      carForm.yearModel.value = car.yearmodel;
+      carForm.yearmodel.value = car.yearmodel;
       carForm.color.value = car.color;
 
       localStorage.setItem("currentId", car.id);
@@ -61,6 +62,8 @@ function setCurrentUser(id) {
 function deleteUser(id) {
   console.log('delete', id);
   fetch(`${url}/${id}`, { method: 'DELETE' }).then((result) => fetchData());
+  
+  
 }
 
 carForm.addEventListener("submit", handleSubmit);
@@ -68,19 +71,21 @@ carForm.addEventListener("submit", handleSubmit);
 function handleSubmit(e) {
   e.preventDefault();
   const serverUserObject = {
-    regNumber: '',
-    carBrand: '',
-    carModel: '',
+    regnr: '', //samma namn som i databasen
+    brand: '',
+    model: '',
     price: '',
-    yearModel: '',
+    yearmodel: '',
     color: '',
-  };
-  serverUserObject.regNumber = carForm.regNumber.value;
-  serverUserObject.carBrand = carForm.carBrand.value;
-  serverUserObject.carModel = carForm.carModel.value;
+  }; // lägger från fälten till databasen
+  serverUserObject.regnr = carForm.regnumber.value;
+  serverUserObject.brand = carForm.carbrand.value;
+  serverUserObject.model = carForm.carmodel.value;
   serverUserObject.price = carForm.price.value;
-  serverUserObject.yearModel = carForm.yearModel.value;
+  serverUserObject.yearmodel = carForm.yearmodel.value;
   serverUserObject.color = carForm.color.value;
+  
+
 
   const id = localStorage.getItem("currentId");
   if (id) serverUserObject.id = id;
@@ -91,11 +96,18 @@ function handleSubmit(e) {
       "content-type": "application/json",
     },
     body: JSON.stringify(serverUserObject),
+    
   });
 
   fetch(request).then((response) => {
     fetchData();
     localStorage.removeItem("currentId");
     carForm.reset();
+    //document.getElementById("staticBackdrop").modal("show");  
+    //$("#staticBackdrop").modal("show");
+    //var myModal = new bootstrap.Modal(document.getElementById('staticBackdrop'));
+    //myModal.show();
   });
+  
 }
+

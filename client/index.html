@@ -6,6 +6,7 @@
     <title>Grupp 3 projekt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
     <link rel="shortcut icon" href="#" />
   </head>
   <body class="bg-primary-subtle">
@@ -31,13 +32,13 @@
           <!-- märke -->
           <div class="mb-3 col-12 col-md-6">
             <label for="carBrand" class="form-label">Bilmärke</label>
-            <input type="text" name="carBrand" class="form-control" id="carbrand" aria-describedby="Car Brand" placeholder="Volvo, Volkswagen" required>
+            <input type="text" name="carBrand" class="form-control" id="carbrand" aria-describedby="Car Brand" placeholder="Volvo" required>
             <div id="carBrandHelp" class="form-text form-help">Fyll i bilmärke</div>
           </div>
           <!--  modell -->
           <div class="mb-3 col-12 col-md-6">
             <label for="carModel" class="form-label">Bilmodell</label>
-            <input type="text" name="carModel" class="form-control" id="regnumber" aria-describedby="Car Model" placeholder="XC70, Passat" required>
+            <input type="text" name="carModel" class="form-control" id="carmodel" aria-describedby="Car Model" placeholder="XC70" required>
             <div id="carModelHelp" class="form-text form-help">Fyll i bilmodell</div>
           </div>
 
@@ -60,11 +61,13 @@
           <div class="mb-3 col-12 col-md-6">
             <label for="color" class="form-label">Färg</label>
             <select class="form-select" name="color">
-              <option value="purple">Lila</option>
-              <option value="green">Grön</option>
-              <option value="gray">Grå</option>
-              <option value="red">Röd</option>
-              <option value="yellow">Gul</option>
+              <option value="secondary">Grå</option>
+              <option value="success">Grön</option>
+              <option value="primary">Blå</option>
+              <option value="info">Ljus blå</option>
+              <option value="danger">Röd</option>
+              <option value="warning">Gul</option>
+              <option value="light">Vit</option>
             </select>
 
             <!-- <input type="text" class="form-control" id="color" aria-describedby="Color" placeholder="black" required>
@@ -81,17 +84,42 @@
             <button
               class="btn btn-secondary"
               type="submit"
-              name="submitUserForm">
+              name="submitUserForm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
               Skicka
             </button>
+            
           </div>
           
         </fieldset>
         </form>
         
       </div>
-      <div id="listContainer"></div>
+      <div class="container row" id="listContainer"></div>
+
       
+      <!-- Button trigger modal -->
+
+
+    <!-- Modal -->
+
+
+      <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              ...
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Understood</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
       
       
