@@ -19,12 +19,12 @@ function fetchData() {
           <p>Årsmodel: ${car.yearmodel}. Pris: ${car.price}. Regnr: ${car.regnr}. </p>
           <div>
             <button
-              class="btn btn-${car.color}"
-              <button onclick="setCurrentUser('${car.id}')">
+              class="btn btn-${car.color}" onclick="setCurrentUser('${car.id}')">
               Ändra
             </button>
-            <button id="dltBtn" class="btn btn-${car.color} " onclick="deleteUser2('${car.id}')">
+            <button id="dltBtn" class="btn btn-${car.color}" type="button" onclick="deleteUser(event,${car.id})">
               Ta bort
+
             </button>
           </div>
         </div>`;
@@ -69,17 +69,22 @@ function setCurrentUser(id) {
 
 // document.getElementById("dltBtn").addEventListener("click", deleteUser);
 
-function deleteUser(id) {
+function deleteUser(event, id) {
+  // event.preventDefault();
   console.log('delete',id);
   // e.preventedDefault();
   // console.log('delete', id);
-  fetch(`${url}/${id}`, { method: 'DELETE' })
-  .then((resonse) => console.log(response));
+  // fetch(`${url}/${id}`, { method: 'DELETE' })
+  // .then((response) => console.log(response));
   //("Bilen borttagen"))
   // .then((result) => fetchData());
-  
-  
-  
+  fetch(`${url}/${id}`,{method:"DELETE"})
+  .then((result) => {
+    myFunction("Bilen borttagen.");
+    fetchData();
+  });
+
+  console.log("BILEN BORTTAGEN!!!!!!!!")
   // myFunction("Bilen borttagen.");
 }
 
@@ -187,7 +192,7 @@ function handleSubmit(e) {
     body: JSON.stringify(serverUserObject),
     
   });
-  console.log("Testtest5")
+  console.log("Testtest2")
 
   const message =
     method === "PUT"
@@ -201,7 +206,7 @@ function handleSubmit(e) {
     localStorage.removeItem("currentId");
     carForm.reset();
 
-    console.log("Testtest2")
+    console.log("Testtest3")
     // showAlert("Ditt meddelande har skickats!"); // Visa alert
     // myFunction("Bilen uppdaterad");
 
@@ -213,7 +218,7 @@ function handleSubmit(e) {
 
   });
 
-  console.log("Testtest3")
+  console.log("Testtest4")
   
 }
 
@@ -222,20 +227,20 @@ function handleSubmit(e) {
 
 
 
-function myFunction(message) {
-    // event.defaultPrevented();
-    alert(message)
-    // alert(`${message} (${method})`);
-    // console.log(response)
-   
-}
-
-
 // function myFunction(message) {
-//   Swal.fire({
-//       icon: 'success',
-//       title: message,
-//       showConfirmButton: false,
-//       timer: 5000 // Tid i millisekunder (justera efter behov)
-//   });
+//     // event.defaultPrevented();
+//     alert(message)
+//     // alert(`${message} (${method})`);
+//     // console.log(response)
+   
 // }
+
+
+function myFunction(message) {
+  Swal.fire({
+      icon: 'success',
+      title: message,
+      showConfirmButton: false,
+      timer: 5000 // Tid i millisekunder (justera efter behov)
+  });
+}
