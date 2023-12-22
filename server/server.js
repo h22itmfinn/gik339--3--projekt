@@ -8,7 +8,7 @@ const server = express();
 const db = new sqlite.Database("./cars.db");
 
 server
-  .use(express.json())
+  .use(express.json()) //gör att vi kan ta emot json i req.body
   .use(express.urlencoded({ extended: false }))
   .use((req, res, next) => {
     // tilllåter att alla adresser, headers och metoder körs mot servern
@@ -16,7 +16,7 @@ server
     res.header("Access-Control-Allow-Headers", "*");
     res.header("Access-Control-Allow-Methods", "*");
   
-    // skickar fråga vidare så att vi kan
+    // skickar fråga vidare så att vi kan behandla den senare
     next();
     });
 
@@ -28,7 +28,7 @@ server.listen(3000, () => {
 // get frågan som retunerar alla rader i databasen
 server.get("/cars", (req, res) => {
     const sql = "SELECT * FROM cars";
-  
+    
     db.all(sql, (err, rows) => {
       if (err) {
         res.status(500).send(err); // 500 är serverfel och err är error objektet
@@ -47,12 +47,12 @@ server.get("/cars/:id", (req, res) => {
       if (err) {
         res.status(500).send(err); // 500 är serverfel och err är error objektet
       } else {
-        res.send(rows[0]); // 0:an gör att man får
-      }
+        res.send(rows[0]); // 0:an gör att man får en rad
+       }
     });
   });
 
-// post fråga
+// post fråga för att lägga till en bil med INSERT
 server.post("/cars", (req, res) => {
     const car = req.body;
     const sql = `INSERT INTO cars(regnr,brand,model,price,yearmodel,color) VALUES(?,?,?,?,?,?)`;
@@ -64,16 +64,14 @@ server.post("/cars", (req, res) => {
       } else {
         res.send("Bilen sparades");
       }
-    }); // andra
+    });
   });
 
-// update baserat på id
-
+//Put fråga för att uppdatera en befintlig bil
 server.put("/cars", (req, res) => {
-    //UPDATE users SET firstName="Mikaela",lastName="Hedberg" WHERE id=1
-    const bodyData = req.body;
-    const id = bodyData.id;
-    const car = {
+    const bodyData = req.body;      // läser in det som finns formuläret i bodyData variablen
+    const id = bodyData.id;         // tar ut id variablen ur bodyData
+    const car = {                   // skapar ett objekt som matchar req.body
       regnr: bodyData.regnr,
       brand: bodyData.brand,
       model: bodyData.model,
@@ -85,8 +83,8 @@ server.put("/cars", (req, res) => {
     let updateString = "";
     const columnsArray = Object.keys(car); // array av objektets nycklar
     columnsArray.forEach((column, i) => {
-      updateString += `${column}="${car[column]}"`;
-      if (i !== columnsArray.length - 1) updateString += ",";
+      updateString += `${column}="${car[column]}"`; // konkatenerar till en sträng med key/value
+      if (i !== columnsArray.length - 1) updateString += ","; //lägger till ett komma mellan alla key/value par
     });
     const sql = `UPDATE cars SET ${updateString} WHERE id=${id}`;
 
@@ -100,20 +98,7 @@ server.put("/cars", (req, res) => {
     });
 });
 
-// // Tar bort bil baserat på id - ÅTERKOM TILL DENNA OCH KOLLA POSTMAN
-// server.delete('/cars/:id', (req, res) => {
-//     const id = req.params.id;
-//     const sql = `DELETE FROM cars WHERE id=${id}`;
-    
-//     db.run(sql, (err) => {
-//         if (err) {
-//         console.log(err);
-//         res.status(500).send(err);
-//         } else {
-//         res.send('Bilen är borttagen');
-//         }
-//     });
-// });
+
 server.delete('/cars/:id', (req, res) => {
   const id = req.params.id;
   const sql = `DELETE FROM cars WHERE id = ${id}`;
